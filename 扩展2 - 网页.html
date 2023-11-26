@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translation By 041 Fm</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f7;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+  }
+
+  h1 {
+    color: #5a5a8d;
+  }
+
+  #inputContainer {
+    margin-bottom: 20px;
+  }
+
+  input[type="text"], #translationResult {
+    width: 30%;
+    padding: 10px;
+    margin: 0 auto 20px auto; /*在输入框和按钮之间留空行*/
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  button, select {
+    background-color: #645a8d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover, select:hover {
+    background-color: #7a7aa7;
+  }
+
+  #translationResult {
+    background-color: #eaeaf3;
+    border-radius: 4px;
+    min-height: 50px;
+    margin-top: 10px;
+  }
+
+  img {
+    width: 20%;
+    height: auto;
+    margin-top: 20px;
+  }
+
+  #translationModeContainer {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: top;
+  }
+
+  #translateButtonContainer {
+    display: inline-block;
+  }
+</style>
+<script>
+  function translateSentence() {
+    var sentenceToTranslate = document.getElementById('sentenceInput').value;
+    var translationMode = document.getElementById('translationMode').value;
+
+    var url = '';
+    if (translationMode === 'zh-en') {
+      url = 'http://110.64.86.212:5000/translate1';
+    } else if (translationMode === 'en-zh') {
+      url = 'http://110.64.86.212:5000/translate2';
+    }
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+        sentence: sentenceToTranslate,
+        mode: translationMode
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('translationResult').textContent = data.translation;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('translationResult').textContent = 'Error: ' + error;
+    });
+  }
+</script>
+</head>
+<body>
+<h1>Translation By Ex4Model</h1>
+<div id="inputContainer">
+  <input type="text" id="sentenceInput" placeholder="Enter sentence to translate">
+  <div class="spacer"></div>
+  <div id="translationModeContainer">
+    <select id="translationMode">
+      <option value="zh-en">中译英</option>
+      <option value="en-zh">英译中</option>
+    </select>
+  </div>
+  <div id="translateButtonContainer">
+    <button onclick="translateSentence()">Translate</button>
+  </div>
+</div>
+<div>
+  <p>Translation:</p>
+  <p id="translationResult"></p>
+</div>
+<img src="Tom.jpg" alt="Logo">
+</body>
+</html>
